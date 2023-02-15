@@ -21,6 +21,8 @@ Usage
     Sorts current manager orders by repeat frequency so repeating orders don't
     prevent one-time orders from ever being completed. The sorting order is:
     one-time orders first, then yearly, seasonally, monthly, and finally, daily.
+    Additionally it will sort by job type, item type, then material type to make
+    searching through large numbers of repeating work orders easier. 
 
 You can keep your orders automatically sorted by adding the following command to
 your ``dfhack-config/init/onMapLoad.init`` file::

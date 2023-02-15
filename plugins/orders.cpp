@@ -991,12 +991,29 @@ static command_result orders_clear_command(color_ostream & out)
     return CR_OK;
 }
 
-static bool compare_freq(df::manager_order *a, df::manager_order *b)
+static bool compare_freq_type_item_mat(df::manager_order *a, df::manager_order *b)
 {
-    if (a->frequency == df::manager_order::T_frequency::OneTime
-            || b->frequency == df::manager_order::T_frequency::OneTime)
-        return a->frequency < b->frequency;
-    return a->frequency > b->frequency;
+    if (a->frequency == b->frequency)
+    {
+        if(a->job_type == b->job_type)
+        {
+            if (a->item_type == b->item_type)
+            {
+                if (a->item_subtype == b->item_subtype)
+                {
+                    if (a->mat_type == b->mat_type)
+                    {
+                        return a->mat_index < b->mat_index;
+                    }
+                    return a->mat_type < b->mat_type;
+                }
+                return a->item_subtype < b->item_subtype;
+            }
+            return a->item_type < b->item_type;
+        }
+        return a->job_type < b->job_type;
+    }
+    return a->frequency < b->frequency;
 }
 
 static command_result orders_sort_command(color_ostream & out)
@@ -1005,11 +1022,11 @@ static command_result orders_sort_command(color_ostream & out)
 
     if (!std::is_sorted(world->manager_orders.begin(),
                         world->manager_orders.end(),
-                        compare_freq))
+                        compare_freq_type_item_mat))
     {
         std::stable_sort(world->manager_orders.begin(),
                          world->manager_orders.end(),
-                         compare_freq);
+                         compare_freq_type_item_mat);
         out << "Fixed priority of manager orders." << std::endl;
     }
 
