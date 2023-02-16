@@ -993,27 +993,9 @@ static command_result orders_clear_command(color_ostream & out)
 
 static bool compare_freq_type_item_mat(df::manager_order *a, df::manager_order *b)
 {
-    if (a->frequency == b->frequency)
-    {
-        if(a->job_type == b->job_type)
-        {
-            if (a->item_type == b->item_type)
-            {
-                if (a->item_subtype == b->item_subtype)
-                {
-                    if (a->mat_type == b->mat_type)
-                    {
-                        return a->mat_index < b->mat_index;
-                    }
-                    return a->mat_type < b->mat_type;
-                }
-                return a->item_subtype < b->item_subtype;
-            }
-            return a->item_type < b->item_type;
-        }
-        return a->job_type < b->job_type;
-    }
-    return a->frequency < b->frequency;
+
+    return std::tie(a->frequency, a->job_type, a->item_type, a->item_subtype, a->mat_type, a->mat_index) <
+        std::tie(b->frequency, b->job_type, b->item_type, b->item_subtype, b->mat_type, b->mat_index);
 }
 
 static command_result orders_sort_command(color_ostream & out)
